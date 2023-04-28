@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Repository } from "typeorm";
-import { movieSchemaRequest } from "../schemas/movies.schemas";
+
 import { AppDataSource } from "../data-source";
 import { Movie } from "../entities";
 import { AppError } from "../error";

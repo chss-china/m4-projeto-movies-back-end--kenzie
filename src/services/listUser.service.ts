@@ -2,8 +2,6 @@ import { Repository } from "typeorm";
 import { Movie } from "../entities";
 import { Tmovie, TmoviePagination } from "../interfaces/movies.interface";
 import { AppDataSource } from "../data-source";
-import { movieSchema } from "../schemas/movies.schemas";
-import { Request } from "express";
 
 export const listMoviesService = async (
   page: number,
@@ -13,11 +11,8 @@ export const listMoviesService = async (
 ): Promise<TmoviePagination> => {
   const movieRepository: Repository<Movie> = AppDataSource.getRepository(Movie);
   let movies: Tmovie[] | undefined;
-  let myPrevPage: string | null = `http://localhost:3000/movies/?page=${
+  let myPrevPage: string | null = `http://localhost:3000/movies?page=${
     page - 1
-  }&perPage=${perPage}`;
-  let myNextPage: string | null = `http://localhost:3000/movies/?page=${
-    page + 1
   }&perPage=${perPage}`;
 
   if (page <= 1) {
@@ -35,43 +30,35 @@ export const listMoviesService = async (
 
   let orderObj = {};
 
-  if (!sort) {
-    order = "asc";
-  }
   if (sort == "price") {
     orderObj = { price: order };
-    /*if (order != "asc" && order != "desc") {
-      order = "asc";
-    }*/
   } else if (sort == "duration") {
     orderObj = { duration: order };
-    /* if (order != "asc" && order != "desc") {
-      order = "asc";
-    }*/
-  }
-  if (sort != "price" && sort != "duration") {
-    orderObj = { id: order };
-    /* if (order != "asc" && order != "desc") {
-      order = "asc";
-    }*/
   }
 
   const totalCount: number = await movieRepository.count();
 
   let numberPages: number = totalCount / perPage;
+  let myNextPage: string | null = `http://localhost:3000/movies?page=${
+    page + 1
+  }&perPage=${perPage}`;
 
   let numberPageInt =
     numberPages > Math.trunc(numberPages)
-      ? Math.trunc(numberPages) + 1
+      ? Math.trunc(numberPages)
       : numberPages;
 
   if (page > numberPageInt) {
     myNextPage = null;
   }
 
-  /* if (!page || !perPage) {
-    movies = await movieRepository.find();
-  } else {*/
+  if (!sort) {
+    movies = await movieRepository.find({
+      skip: (page - 1) * perPage,
+      take: perPage,
+    });
+  }
+
   movies = await movieRepository.find({
     skip: (page - 1) * perPage,
     take: perPage,

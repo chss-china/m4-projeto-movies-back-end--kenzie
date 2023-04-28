@@ -8,7 +8,8 @@ import {
 import { createMoviesService } from "../services/createMovies.service";
 import { updateMovieService } from "../services/updateMovies.service";
 import { listMoviesService } from "../services/listUser.service";
-import { Movie } from "../entities";
+
+import { deleteMoviesService } from "../services/deleteMovies.service";
 
 export const createMovieControllers = async (
   req: Request,
@@ -50,4 +51,12 @@ export const listMovieController = async (
     sort
   );
   return res.json(movies);
+};
+export const deleteMovieControllers = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const id: number = parseInt(req.params.id);
+  const deleteMovie: Tmovie = await deleteMoviesService(id);
+  return res.status(204).json(deleteMovie);
 };
