@@ -1,5 +1,5 @@
 # Locadora de filmes com TypeORM
-
+## resultado foi excelente obtendo nota maxima e passando em todos testes
 # Introdução
 
 Há alguns dias você recebeu uma demanda para elaborar a API de um serviço de locação de filmes. Porém a forma com que você executou e as ferramentas que utilizou não agradaram o nosso cliente... É... ele é exigente.
